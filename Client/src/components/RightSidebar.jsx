@@ -1,45 +1,64 @@
 import assets, { imagesDummyData } from "../assets/assets";
 
-const RightSidebar = ({ user }) => {
+const RightSidebar = ({ user, onLogout }) => {
+  if (!user) return null;
+
   return (
-    user && (
-      <div
-        className={`bg-[#8185B2]/10 text-white w-full relative overflow-y-scroll ${
-          user ? "max-md:hidden" : ""
-        }`}
-      >
-        <div className="pt-16 flex flex-col items-center gap-2 text-xs font-light mx-auto">
+    <div className="h-full w-full text-white flex flex-col">
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-y-auto px-5 pt-14 pb-24">
+        <div className="flex flex-col items-center gap-3 text-xs font-light mx-auto">
+          {/* REAL profile image from your data */}
           <img
             src={user?.profilePic || assets.avatar_icon}
-            alt=""
-            className="w-20 aspect-[1/1] rounded-full"
+            alt="Profile"
+            className="w-20 h-20 rounded-full object-cover"
           />
-          <h1 className="px-10 text-xl font-medium mx-auto flex items-center gap-2">
-            <p className="w-2 h-2 rounded-full bg-green-500"></p>
+          <h1 className="text-xl font-medium flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-green-500" />
             {user.fullName}
           </h1>
-          <p className="px-10 mx-auto">{user.bio}</p>
+          <p className="opacity-80 text-center">{user.bio}</p>
         </div>
-        <hr className="border-[#ffffff50] my-4" />
-        <div className="px-5 text-xs">
-          <p>Media</p>
-          <div className="mt-2 max-h-[200px] overflow-y-scroll grid grid-cols-2 gap-2 opacity-80">
+
+        <hr className="border-[#ffffff30] my-4" />
+
+        <div className="px-1 text-xs">
+          <p className="opacity-80">Media</p>
+          <div className="mt-2 grid grid-cols-2 gap-2 max-h-[220px] overflow-y-auto opacity-90">
             {imagesDummyData.map((url, index) => (
-              <div
+              <button
                 key={index}
-                onClick={() => window.open(url)}
-                className="cursor-pointer rounded"
+                onClick={() => window.open(url, "_blank")}
+                className="rounded overflow-hidden"
+                title="Open image"
               >
-                <img src={url} alt="" className="h-full rounded-md" />
-              </div>
+                <img
+                  src={url}
+                  alt=""
+                  className="w-full h-full object-cover aspect-video"
+                />
+              </button>
             ))}
           </div>
         </div>
-        <button className="absolute bottom-5 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-400 to-violet-600 text-white border-none text-sm font-light py-2 px-20 rounded-full cursor-pointer">
+      </div>
+
+      {/* Sticky footer with Logout (fixed at the bottom) */}
+      <div className="sticky bottom-0 left-0 right-0 border-t border-white/10 bg-[#0f0b1f]/80 backdrop-blur px-4 py-4 pb-[env(safe-area-inset-bottom)]">
+        <button
+          onClick={onLogout}
+          className="w-full py-3 rounded-xl font-medium
+                     bg-gradient-to-r from-rose-500 to-red-600
+                     shadow-lg shadow-red-800/20
+                     hover:brightness-110 active:scale-[0.99]
+                     transition"
+          aria-label="Logout"
+        >
           Logout
         </button>
       </div>
-    )
+    </div>
   );
 };
 

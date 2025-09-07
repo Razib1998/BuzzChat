@@ -1,12 +1,22 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import assets from "../assets/assets";
+import { AuthContext } from "../Context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [mode, setMode] = useState("signin"); // "signin" | "signup"
 
   const [signin, setSignin] = useState({ email: "", password: "" });
-  const [signup, setSignup] = useState({ name: "", email: "", password: "" });
+  const [signup, setSignup] = useState({
+    fullName: "",
+    email: "",
+    password: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const { login } = useContext(AuthContext);
+
+  const navigate = useNavigate();
 
   const handleSigninChange = (e) => {
     const { id, value } = e.target;
@@ -17,20 +27,27 @@ const LoginPage = () => {
     setSignup((p) => ({ ...p, [id]: value }));
   };
 
-  const resetSignin = () => setSignin({ email: "", password: "" });
-  const resetSignup = () => setSignup({ name: "", email: "", password: "" });
+  // const resetSignin = () => setSignin({ email: "", password: "" });
 
-  const submitSignin = (e) => {
+  const submitSignin = async (e) => {
     e.preventDefault();
-    console.log("SIGN IN:", signin);
-    resetSignin();
-    e.currentTarget.reset?.();
+    try {
+      setLoading(true);
+      await login("signin", signin);
+      navigate("/");
+    } finally {
+      setLoading(false);
+    }
   };
-  const submitSignup = (e) => {
+  const submitSignup = async (e) => {
     e.preventDefault();
-    console.log("SIGN UP:", signup);
-    resetSignup();
-    e.currentTarget.reset?.();
+    try {
+      setLoading(true);
+      console.log(signup);
+      await login("signup", signup);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const formVariants = {
@@ -188,10 +205,11 @@ const LoginPage = () => {
                         </div>
 
                         <button
+                          disabled={loading}
                           type="submit"
                           className="w-full rounded-xl bg-gradient-to-r from-slate-400/70 via-sky-400/70 to-slate-400/70 px-4 py-2.5 font-medium text-slate-950 shadow-lg transition hover:from-slate-300/80 hover:via-sky-300/80 hover:to-slate-300/80 focus:outline-none focus:ring-2 focus:ring-slate-100/40"
                         >
-                          Sign in
+                          {loading ? "Loading" : "Sign in"}
                         </button>
                       </motion.form>
                     ) : (
@@ -214,11 +232,11 @@ const LoginPage = () => {
                           </label>
                           <input
                             type="text"
-                            id="name"
-                            value={signup.name}
+                            id="fullName"
+                            value={signup.fullName}
                             onChange={handleSignupChange}
                             placeholder="Your full name"
-                            autoComplete="name"
+                            autoComplete="fullName"
                             required
                             className="w-full rounded-xl border border-slate-300/15 bg-slate-900/50 px-3 py-2 text-slate-100 placeholder-slate-300/40 outline-none focus:border-transparent focus:ring-2 focus:ring-sky-300/60"
                           />
@@ -262,10 +280,11 @@ const LoginPage = () => {
                         </div>
 
                         <button
+                          disabled={loading}
                           type="submit"
                           className="w-full rounded-xl bg-gradient-to-r from-slate-400/70 via-sky-400/70 to-slate-400/70 px-4 py-2.5 font-medium text-slate-950 shadow-lg transition hover:from-slate-300/80 hover:via-sky-300/80 hover:to-slate-300/80 focus:outline-none focus:ring-2 focus:ring-slate-100/40"
                         >
-                          Sign up
+                          {loading ? "Loading" : "Sign up"}
                         </button>
                       </motion.form>
                     )}

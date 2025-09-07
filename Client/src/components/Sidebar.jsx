@@ -1,14 +1,13 @@
 import assets, { userDummyData } from "../assets/assets";
 import { useNavigate } from "react-router-dom";
+
 const Sidebar = ({ user, setUser }) => {
   const navigate = useNavigate();
+
   return (
-    <div
-      className={`bg-[#8185B2]/10 h-full p-5 rounded-xl overflow-y-auto text-white ${
-        setUser ? "max-md:hidden" : ""
-      }`}
-    >
-      <div className="pb-5">
+    <div className="h-full min-h-0 bg-[#8185B2]/10 text-white p-5 rounded-xl flex flex-col">
+      {/* Header/Search (shrink-0) */}
+      <div className="shrink-0 pb-5">
         <div className="flex justify-between items-center">
           <img src={assets.logo} alt="Logo" className="max-w-40" />
           <div className="relative py-2 group">
@@ -29,6 +28,7 @@ const Sidebar = ({ user, setUser }) => {
             </div>
           </div>
         </div>
+
         <div className="bg-[#282142] rounded-full flex items-center gap-2 py-3 px-4 mt-5 ">
           <img src={assets.search_icon} alt="Search" className="w-3" />
           <input
@@ -38,15 +38,15 @@ const Sidebar = ({ user, setUser }) => {
           />
         </div>
       </div>
-      <div className="flex flex-col">
+
+      {/* User list (flex-1, min-h-0, scroll) */}
+      <div className="flex-1 min-h-0 overflow-y-auto">
         {userDummyData.map((singleUser, index) => (
           <div
             key={index}
-            onClick={() => {
-              setUser(singleUser);
-            }}
-            className={`relative flex items-center gap-2 p-2 pl-4 rounded cursor-pointer max-sm:text-sm ${
-              user?._id === singleUser._id && "bg-[#282142]/50"
+            onClick={() => setUser(singleUser)}
+            className={`relative flex items-center gap-2 p-2 pl-4 rounded cursor-pointer max-sm:text-sm hover:bg-[#282142]/40 transition ${
+              user?._id === singleUser._id ? "bg-[#282142]/50" : ""
             }`}
           >
             <img
