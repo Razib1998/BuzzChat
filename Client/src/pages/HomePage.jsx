@@ -1,11 +1,14 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import ChatContainer from "../components/ChatContainer";
 import RightSidebar from "../components/RightSidebar";
 import Sidebar from "../components/Sidebar";
+import ChatContext from "../Context/ChatContext";
 
 const HomePage = () => {
-  const [selectedUser, setSelectedUser] = useState(null);
+  // const [selectedUser, setSelectedUser] = useState(null);
   const [showProfile, setShowProfile] = useState(false);
+
+  const { selectedUser } = useContext(ChatContext);
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-4">
@@ -16,26 +19,11 @@ const HomePage = () => {
           backdrop-blur-xl border-2 border-gray-600 rounded-2xl overflow-hidden relative
         "
       >
-        {!selectedUser && (
-          <Sidebar
-            user={selectedUser}
-            setUser={(u) => {
-              setSelectedUser(u);
-              setShowProfile(false);
-            }}
-          />
-        )}
+        {!selectedUser && <Sidebar />}
 
         {selectedUser && (
           <>
-            <ChatContainer
-              user={selectedUser}
-              setUser={(u) => {
-                setSelectedUser(u);
-                setShowProfile(false);
-              }}
-              onHeaderClick={() => setShowProfile(true)}
-            />
+            <ChatContainer onHeaderClick={() => setShowProfile(true)} />
 
             {/* Right Sidebar Slide-over */}
             <div
@@ -65,7 +53,7 @@ const HomePage = () => {
                   ${showProfile ? "translate-x-0" : "translate-x-full"}
                 `}
               >
-                <RightSidebar user={selectedUser} />
+                <RightSidebar />
                 <button
                   onClick={() => setShowProfile(false)}
                   className="absolute top-3 right-3 text-md bg-green-600 hover:bg-white/20 px-3 py-1 rounded-md"

@@ -1,8 +1,9 @@
 import React, { useContext, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import assets from "../assets/assets";
-import { AuthContext } from "../Context/AuthContext";
+
 import { useNavigate } from "react-router-dom";
+import AuthContext from "../Context/AuthContext";
 
 const LoginPage = () => {
   const [mode, setMode] = useState("signin"); // "signin" | "signup"
